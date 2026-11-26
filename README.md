@@ -75,6 +75,12 @@ dari HASH_SALT + channel id, 16 karakter).
   dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
   CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
   itu muncul lagi di `src/`.
+- **2026-11-26 — Pilot (Bagian 5).** 157 komentar pertama dilabeli manual
+  (lembar_label_a): 10 spoiler = 6,4%, di atas ambang ~5%. Keputusan: sampling
+  acak komentar teratas per episode cukup; tidak perlu sampling terarah.
+  Catatan: 2 label tip mekanik awalnya salah dilabeli 1, direvisi ke 0
+  sesuai aturan G1 setelah pelabel mengingat aturan. Basis 10 spoiler tipis
+  untuk estimasi proporsi (CI ±3–5 poin), dicatat sebagai keterbatasan.
 - **2026-11-26 — `data/spoiler_example/` tidak masuk dataset.** Isi folder
   (termasuk `contoh_200_spoiler.csv`) hanya untuk latihan pelabel dan tes
   kode. Catatan: label di `contoh_200_spoiler.csv` BERTENTANGAN dengan aturan
