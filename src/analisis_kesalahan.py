@@ -41,6 +41,7 @@ def main() -> None:
     # Kolom pola dikisi manual oleh pemilik proyek (bagian dari temuan penelitian),
     # diawali kosong; pilihan kategori ada di konstanta POLA.
     salah["pola"] = ""
+    salah["jenis_galat"] = ""  # "galat_label" atau "galat_model"; diisi manual bersama pola
 
     out = HASIL / "analisis_kesalahan.csv"
     salah.to_csv(out, index=False, encoding="utf-8-sig")
