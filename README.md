@@ -75,6 +75,12 @@ dari HASH_SALT + channel id, 16 karakter).
   dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
   CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
   itu muncul lagi di `src/`.
+- **2026-11-26 — Tes pemahaman pelabel A (Lampiran B): LULUS 7/8.**
+  Pelabel A melabeli 8 baris dari contoh_200_spoiler.csv tanpa melihat kolom
+  label; skor terhadap panduan 2.1 = 7/8 (ambang 4/5). Satu-satunya meleset:
+  id 47 (mekanik rambut/jenggot real-time, dilabeli 1 padahal G1 = 0) —
+  konflik G1 yang sudah diprediksi; label file contoh memang bertentangan
+  dengan panduan pada kategori Bocoran Mekanik.
 - **2026-11-26 — Klarifikasi G1 (easter egg/misteri).** Komentar yang
   mengungkap lokasi/keberadaan easter egg atau misteri dunia (bigfoot, UFO,
   portal, topi Arthur) TANPA dampak ke alur/nasib karakter = 0. Alasan:
