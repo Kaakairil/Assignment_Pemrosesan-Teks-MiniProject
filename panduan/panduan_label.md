@@ -63,6 +63,11 @@ Labeling tidak boleh bergantung pada klaim jumlah ending (belum terverifikasi).
   - "kalo uang 2 juta, endingnya bakal bagus / dapat true ending" → 1 (S5: mekanik uang + hasil ending)
   - "tembak kaki aja biar NPC/polisi ga mati, kalau ga begitu di ending Lucia dan Jason mati" → 1 (S5, sekaligus S1: menyebut nasib karakter di ending)
 - Bandingkan: "pake masker biar ga kena bintang" → 0 (G1, tanpa dampak cerita).
+- **Easter egg, lokasi rahasia, atau misteri dunia (bigfoot, UFO, portal, topi
+  Arthur) tanpa dampak ke alur/nasib karakter → 0 (G1).** Mengungkapnya merusak
+  "pengalaman menemukan", bukan cerita — di luar definisi spoiler proyek ini.
+  Yang menentukan adalah isi misterinya: kalau komentar menjelaskan bahwa
+  misteri itu terhubung ke alur, twist, atau nasib karakter → baru spoiler (S2/S5).
 
 - **Mekanik, tidak jelas dampak ceritanya** → -1 + alasan di `catatan`. Jangan menebak.
 - **"Jangan spoiler ya, tapi endingnya..." lalu isinya** → 1 (isinya spoiler).
