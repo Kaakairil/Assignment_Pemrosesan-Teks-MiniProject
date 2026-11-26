@@ -10,8 +10,54 @@ from src.config import DATA_LABELED, DATA_INTERIM, SEED, TEST_SIZE, VAL_SIZE
 
 logger = logging.getLogger(__name__)
 
+# Video IDs dari CLAUDE.md v2.1 tabel pembagian
+TRAIN_VIDEO_IDS = {
+    "Lve9p0C5rM4", "M15N9KPMHcE", "jh2ZJRbNmGY", "kzqVgm8Ysok",
+    "tnp1lsqUh-4", "RVFkA39mGhE", "Th2kDMwe-5s", "LRtS4c8UkV0"
+}
+VAL_VIDEO_IDS = {"8vTBVM6Z2cg", "92ej1dKDnlM"}
+TEST_VIDEO_IDS = {"5m-Xi8lgvWY"}
+ALL_VALID_IDS = TRAIN_VIDEO_IDS | VAL_VIDEO_IDS | TEST_VIDEO_IDS
+SPOILER_EXAMPLE_IDS = set(str(i) for i in range(1, 201))
+
 # Data uji tidak boleh dipakai untuk memilih parameter apa pun (grid search,
 # threshold, panjang token, dll). Hanya untuk evaluasi akhir sekali.
+
+
+def validasi_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Reject baris tidak valid: status != valid, label kosong, spoiler_example, video tidak di tabel."""
+    awal = len(df)
+    
+    # 1. Reject status != "valid"
+    if "status" in df.columns:
+        invalid_status = df[df["status"] != "valid"]
+        if len(invalid_status) > 0:
+            logger.warning("Reject %d baris dengan status != 'valid'", len(invalid_status))
+            df = df[df["status"] == "valid"]
+    
+    # 2. Reject label_final kosong atau NaN
+    kosong = df["label_final"].isna() | (df["label_final"] == "")
+    if kosong.sum() > 0:
+        logger.warning("Reject %d baris dengan label_final kosong", kosong.sum())
+        df = df[~kosong]
+    
+    # 3. Reject spoiler_example (id 1-200)
+    if df["id"].astype(str).isin(SPOILER_EXAMPLE_IDS).any():
+        n_example = df["id"].astype(str).isin(SPOILER_EXAMPLE_IDS).sum()
+        logger.warning("Reject %d baris dari spoiler_example", n_example)
+        df = df[~df["id"].astype(str).isin(SPOILER_EXAMPLE_IDS)]
+    
+    # 4. Reject video_id tidak di tabel (atau kolom tidak ada)
+    if "video_id" not in df.columns:
+        raise ValueError("Kolom 'video_id' tidak ada. File belum siap untuk split per video.")
+    
+    invalid_video = ~df["video_id"].isin(ALL_VALID_IDS)
+    if invalid_video.sum() > 0:
+        logger.warning("Reject %d baris dengan video_id tidak di tabel pembagian", invalid_video.sum())
+        df = df[~invalid_video]
+    
+    logger.info("Validasi: %d baris awal → %d baris valid", awal, len(df))
+    return df.reset_index(drop=True)
 
 
 def gabung_label(path_interim: Path, path_label: Path) -> pd.DataFrame:
@@ -27,7 +73,9 @@ def gabung_label(path_interim: Path, path_label: Path) -> pd.DataFrame:
 
 
 def buat_split(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Buang ambigu (-1), lalu stratified split test dan val. Cek kebocoran ID."""
+    """Validasi, buang ambigu (-1), lalu stratified split test dan val. Cek kebocoran ID."""
+    df = validasi_data(df)
+    
     n_ambigu = int((df["label_final"] == -1).sum())
     df = df[df["label_final"] != -1].reset_index(drop=True)
     logger.info("Dibuang ambigu (-1): %d; sisa %d baris", n_ambigu, len(df))
