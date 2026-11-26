@@ -80,8 +80,11 @@ dari HASH_SALT + channel id, 16 karakter).
   Hanya 4 ketidaksesuaian: 2 kasus batas nyata (komentar peristiwa gameplay
   spesifik seperti "mati dimakan b2" dan "NPC teleport one punch" — A=1,
   B=0) dan 2 kasus ambigu (opini bug/curang; referensi karakter game lain).
-  Hasil tertulis di hasil/kesepakatan.txt. Tindak lanjut: diskusikan 4 kasus,
-  perjelas panduan bila perlu, lalu hitung ulang subset baru.
+  Hasil tertulis di hasil/kesepakatan.txt. Tindak lanjut SELESAI: 4 kasus
+  dibahas dengan pemilik — 3 revisi label A (NPC teleport = G1 0; referensi
+  karakter game lain = 0; 1 tetap: "mati dimakan b2" = S1 label A dipertahankan).
+  Kappa ulang = **0,740** — LULUS ambang 0,6, pelabelan penuh dibuka.
+  Catatan: label A pada 100 subset menunjukkan kesepakatan 98% dengan B.
 - **2026-11-26 — Pelabelan A selesai (3.607 baris).** Mode cepat
   (ENTER=0) + triage sekilas, diikuti audit kata kunci berbasis panduan:
   90 baris berlabel 0 bersinyal kuat dicek acak, 14 baris risiko tinggi
