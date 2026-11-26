@@ -75,6 +75,15 @@ dari HASH_SALT + channel id, 16 karakter).
   dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
   CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
   itu muncul lagi di `src/`.
+- **2026-11-26 — Pelabelan A selesai (3.607 baris).** Mode cepat
+  (ENTER=0) + triage sekilas, diikuti audit kata kunci berbasis panduan:
+  90 baris berlabel 0 bersinyal kuat dicek acak, 14 baris risiko tinggi
+  (ternyata/twist/ending) direview satu per satu — semuanya konsisten
+  dengan panduan v2.1. Kesimpulan penting untuk pelabel: kata "ending" di
+  komentar replay bisa berarti AKHIR STREAM, bukan ending game — label
+  mengikuti isi. Distribusi: 3.468 bukan spoiler (96,1%), 94 spoiler
+  (2,6%), 45 ambigu (1,2%). Proporsi spoiler jauh di bawah pilot (6,4%)
+  karena triage kilat; dicatat sebagai risiko utama laporan.
 - **2026-11-26 — Tes pemahaman pelabel A (Lampiran B): LULUS 7/8.**
   Pelabel A melabeli 8 baris dari contoh_200_spoiler.csv tanpa melihat kolom
   label; skor terhadap panduan 2.1 = 7/8 (ambang 4/5). Satu-satunya meleset:
