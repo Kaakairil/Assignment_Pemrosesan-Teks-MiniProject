@@ -59,6 +59,11 @@ Labeling tidak boleh bergantung pada klaim jumlah ending (belum terverifikasi).
 
 ## 5. Kasus batas
 
+- **Tips + konsekuensi cerita = SPOILER (S5).** Contoh yang WAJIB dilabeli 1:
+  - "kalo uang 2 juta, endingnya bakal bagus / dapat true ending" → 1 (S5: mekanik uang + hasil ending)
+  - "tembak kaki aja biar NPC/polisi ga mati, kalau ga begitu di ending Lucia dan Jason mati" → 1 (S5, sekaligus S1: menyebut nasib karakter di ending)
+- Bandingkan: "pake masker biar ga kena bintang" → 0 (G1, tanpa dampak cerita).
+
 - **Mekanik, tidak jelas dampak ceritanya** → -1 + alasan di `catatan`. Jangan menebak.
 - **"Jangan spoiler ya, tapi endingnya..." lalu isinya** → 1 (isinya spoiler).
 - **"Jangan spoiler!" saja** → 0.
@@ -80,6 +85,8 @@ Labeling tidak boleh bergantung pada klaim jumlah ending (belum terverifikasi).
 | "Jangan spoiler!" saja | 0 | T1 |
 | "Di menit 2:30 ternyata..." lalu menjelaskan | 1 | S2 |
 | "pake masker biar ga kena bintang" | 0 | G1 |
+| "kalo uang 2 juta, endingnya bakal bagus / dapat true ending" | 1 | S5 |
+| "tembak kaki aja biar NPC ga mati, kalau ga, di ending Lucia dan Jason mati" | 1 | S5+S1 |
 | "kalau trust meter di bawah 30%, Lucia ninggalin Jason" | 1 | S5 |
 | "pilih X di misi terakhir, endingnya Y" | 1 | S6 |
 | "siapin mental buat misi final" | 0 | T1 |
