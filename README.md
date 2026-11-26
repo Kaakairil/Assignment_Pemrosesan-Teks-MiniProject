@@ -75,6 +75,10 @@ dari HASH_SALT + channel id, 16 karakter).
   dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
   CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
   itu muncul lagi di `src/`.
+- **2026-11-26 — Panduan label v2.1 disetujui dan dikunci.** Pemilik
+  menyetujui `panduan/panduan_label.md` (aturan S1–S6, G1, T1, R1, contoh S5
+  tips+konsekuensi). Mulai sekarang perubahan panduan wajib dicatat ulang dan
+  memicu pelabelan ulang data terdampak.
 - **2026-11-26 — Pilot (Bagian 5).** 157 komentar pertama dilabeli manual
   (lembar_label_a): 10 spoiler = 6,4%, di atas ambang ~5%. Keputusan: sampling
   acak komentar teratas per episode cukup; tidak perlu sampling terarah.
