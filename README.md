@@ -40,7 +40,7 @@ python -m src.buat_lembar_label
 # Tahap 4 — Cohen's kappa (berhenti jika < 0.6)
 python -m src.kesepakatan
 
-# Tahap 5 — gabung label_final dan split stratified
+# Tahap 5 — gabung label_final dan split per video (train #1-8, val #9-10, test #11)
 #   (jalankan setelah lembar digabung ke komentar_berlabel.csv dengan label_final)
 python -m src.split
 
@@ -126,9 +126,19 @@ dari HASH_SALT + channel id, 16 karakter).
   — komentar atas di replay umumnya reaksi/timestamp/sapaan. Uji hanya
   berisi ~6 spoiler; metrik per-seed akan berisik. Dicatat sebagai
   keterbatasan utama laporan.
-- **CPU untuk Metode B:** gate GPU di `metode_b` dilewati dengan flag
-  `--pakai-cpu` atas permintaan pemilik ("lanjut sampai model A dan B jadi").
-  Untuk laporan final, fine-tuning ulang di GPU (Colab) sangat disarankan.
+- **Training Metode B di GPU lokal (RTX 3050 Laptop 4GB).** Percobaan Google
+  Colab gagal berulang (clone ganda, sel korup, runtime terputus, dan satu
+  insiden training pada data lama yang tidak valid), sehingga notebook Colab
+  dihapus dan training dipindah ke laptop dengan torch cu128. Gate GPU di
+  `metode_b` kini lewat karena CUDA tersedia. `save_total_limit=1`,
+  batch train 4 × grad-accum 2, eval batch 8 (batas VRAM 4GB). Tiga run
+  penuh mengalami crash pada fase akhir (save/predict), sehingga prediksi
+  per seed direkonstruksi manual dari checkpoint terbaik (seed42→ckpt-798,
+  seed43→ckpt-1064, seed44→ckpt-798).
+- **Konsensus seed dihapus (panduan 2.1).** Metode B dilaporkan sebagai
+  rata-rata ± simpangan baku antar tiga seed (42/43/44); tidak ada prediksi
+  gabungan seed dan tidak ada seed dipilih berdasarkan data uji. McNemar
+  dijalankan per seed.
 - **numpy 2.x:** templat `requirements.txt` di CLAUDE.md memakai `numpy==1.*`,
   tetapi pyarrow/datasets modern butuh numpy≥2 — dinaikkan ke `numpy==2.*`.
 - **Beberapa video:** CLAUDE.md menyebut satu video, tetapi pemilik memberikan
@@ -142,6 +152,4 @@ dari HASH_SALT + channel id, 16 karakter).
   sesuai catatan perbandingan adil di rencana proyek.
 - **Waktu pengambilan:** dicatat pada nama file mentah
   (`komentar_<VIDEO_ID>_<tanggal>_N.json`).
-- **Metode B agregat:** evaluasi memakai konsensus rata-rata skor antar seed
-  (ambang 0.5) untuk confusion matrix; per-seed metrik juga tersimpan.
 - **Jumlah ending GTA 6:** TODO_VERIFIKASI — belum dicantumkan tanpa sumber resmi.
