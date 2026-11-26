@@ -110,8 +110,8 @@ def latih_satu_seed(seed: int, train: pd.DataFrame, val: pd.DataFrame, tokenizer
     targs = TrainingArguments(
         output_dir=str(out_dir),
         learning_rate=2e-5,
-        per_device_train_batch_size=4,      # kecil: CPU + RAM terbatas
-        per_device_eval_batch_size=4,
+        per_device_train_batch_size=4,      # kecil: RTX 3050 4GB
+        per_device_eval_batch_size=8,
         gradient_accumulation_steps=2,      # batch efektif tetap 8
         num_train_epochs=4,
         eval_strategy="epoch",
