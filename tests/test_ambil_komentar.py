@@ -28,8 +28,12 @@ def _item(cid: str, teks: str, channel: str, like: int = 0, balasan: int = 0) ->
 
 def test_ke_dataframe_skema_dan_anonim():
     items = [_item("c1", "keren banget", "UC123", like=5, balasan=2)]
-    df = ke_dataframe(items, salt="SALT")
-    assert list(df.columns) == ["id", "teks", "waktu", "jumlah_like", "balasan", "id_anonim"]
+    df = ke_dataframe(items, salt="SALT", video_id="45r3OyaxvFE")
+    assert list(df.columns) == [
+        "id", "video_id", "teks", "waktu", "jumlah_like", "balasan", "id_anonim"
+    ]
+    assert df.loc[0, "id"].startswith("yt_")
+    assert df.loc[0, "video_id"] == "45r3OyaxvFE"
     assert df.loc[0, "id_anonim"] != "UC123"
     assert len(df.loc[0, "id_anonim"]) == 16
 
