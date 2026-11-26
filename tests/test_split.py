@@ -36,7 +36,7 @@ def test_validasi_reject_status_tidak_valid():
     """Validasi harus reject baris dengan status != 'valid'."""
     df = pd.DataFrame({
         "id": ["id1", "id2", "id3"],
-        "video_id": ["Lve9p0C5rM4", "M15N9KPMHcE", "jh2ZJRbNmGY"],
+        "video_id": ["45r3OyaxvFE", "QSPPyA1736U", "B2Bon2X1jPQ"],
         "label_final": [0, 1, 0],
         "status": ["valid", "tidak_valid_timestamp", "tidak_valid_kosong_atau_tautan"],
     })
@@ -49,7 +49,7 @@ def test_validasi_reject_label_kosong():
     """Validasi harus reject baris dengan label_final kosong atau NaN."""
     df = pd.DataFrame({
         "id": ["id1", "id2", "id3"],
-        "video_id": ["Lve9p0C5rM4", "M15N9KPMHcE", "jh2ZJRbNmGY"],
+        "video_id": ["45r3OyaxvFE", "QSPPyA1736U", "B2Bon2X1jPQ"],
         "label_final": [0, "", 1],
         "status": ["valid", "valid", "valid"],
     })
@@ -62,7 +62,7 @@ def test_validasi_reject_spoiler_example():
     """Validasi harus reject baris dari spoiler_example (id 1-200)."""
     df = pd.DataFrame({
         "id": ["50", "id_real", "150"],
-        "video_id": ["Lve9p0C5rM4", "M15N9KPMHcE", "jh2ZJRbNmGY"],
+        "video_id": ["45r3OyaxvFE", "QSPPyA1736U", "B2Bon2X1jPQ"],
         "label_final": [1, 0, 1],
         "status": ["valid", "valid", "valid"],
     })
@@ -75,7 +75,7 @@ def test_validasi_reject_video_tidak_di_tabel():
     """Validasi harus reject baris dengan video_id tidak di tabel pembagian."""
     df = pd.DataFrame({
         "id": ["id1", "id2", "id3"],
-        "video_id": ["Lve9p0C5rM4", "INVALID_VIDEO", "M15N9KPMHcE"],
+        "video_id": ["45r3OyaxvFE", "INVALID_VIDEO", "QSPPyA1736U"],
         "label_final": [0, 1, 0],
         "status": ["valid", "valid", "valid"],
     })
@@ -99,7 +99,7 @@ def test_buat_split_no_id_overlap():
     """Split harus tidak ada ID yang muncul di dua split berbeda."""
     df = pd.DataFrame({
         "id": [f"id{i}" for i in range(100)],
-        "video_id": ["Lve9p0C5rM4"] * 100,
+        "video_id": ["45r3OyaxvFE"] * 100,
         "label_final": [0, 1] * 50,
         "status": ["valid"] * 100,
         "teks": ["teks"] * 100,
