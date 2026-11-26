@@ -10,12 +10,12 @@ from src.config import DATA_LABELED, DATA_INTERIM, SEED, TEST_SIZE, VAL_SIZE
 
 logger = logging.getLogger(__name__)
 
-# Video IDs dari CLAUDE.md v2.1 tabel pembagian
+# Video IDs dari CLAUDE.md v2.1 tabel pembagian (bagian 2)
 TRAIN_VIDEO_IDS = {
-    "Lve9p0C5rM4", "M15N9KPMHcE", "jh2ZJRbNmGY", "kzqVgm8Ysok",
-    "tnp1lsqUh-4", "RVFkA39mGhE", "Th2kDMwe-5s", "LRtS4c8UkV0"
+    "45r3OyaxvFE", "QSPPyA1736U", "B2Bon2X1jPQ", "03qhcshfeMY",
+    "lF_QYSm2T-Q", "u_Lb6sh9N0M", "MWQtXTTAgeM", "z6sBvvg_004",
 }
-VAL_VIDEO_IDS = {"8vTBVM6Z2cg", "92ej1dKDnlM"}
+VAL_VIDEO_IDS = {"zYTPbx83wCQ", "wJVeWiqMJ-M"}
 TEST_VIDEO_IDS = {"5m-Xi8lgvWY"}
 ALL_VALID_IDS = TRAIN_VIDEO_IDS | VAL_VIDEO_IDS | TEST_VIDEO_IDS
 SPOILER_EXAMPLE_IDS = set(str(i) for i in range(1, 201))
