@@ -91,7 +91,7 @@ def buat_dataset(teks: list[str], label: list[int], tokenizer) -> "datasets.Data
     )
 
 
-def latih_satu_seed(seed: int, train: pd.DataFrame, val: pd.DataFrame, tokenizer) -> AutoModelForSequenceClassification:
+def latih_satu_seed(seed: int, train: pd.DataFrame, val: pd.DataFrame, tokenizer, lanjut: bool = False) -> AutoModelForSequenceClassification:
     """Fine-tune satu seed; simpan checkpoint terbaik ke models/bert_seed<N>."""
     set_seed(seed)
     out_dir = MODELS / f"bert_seed{seed}"
@@ -99,14 +99,20 @@ def latih_satu_seed(seed: int, train: pd.DataFrame, val: pd.DataFrame, tokenizer
     ds_train = buat_dataset(train["teks_bert"].tolist(), train["label_final"].tolist(), tokenizer)
     ds_val = buat_dataset(val["teks_bert"].tolist(), val["label_final"].tolist(), tokenizer)
 
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_BERT, num_labels=2)
+    # Resume dari checkpoint terakhir bila diminta dan ada.
+    ckpts = sorted(out_dir.glob("checkpoint-*"), key=lambda p: int(p.name.split("-")[1])) if out_dir.exists() else []
+    titik_mulai = ckpts[-1] if (lanjut and ckpts) else None
+    model = AutoModelForSequenceClassification.from_pretrained(
+        titik_mulai if titik_mulai else MODEL_BERT, num_labels=2
+    )
     bobot = hitung_bobot_kelas(train)
 
     targs = TrainingArguments(
         output_dir=str(out_dir),
         learning_rate=2e-5,
-        per_device_train_batch_size=8,      # kecil: CPU + RAM terbatas
-        per_device_eval_batch_size=8,
+        per_device_train_batch_size=4,      # kecil: CPU + RAM terbatas
+        per_device_eval_batch_size=4,
+        gradient_accumulation_steps=2,      # batch efektif tetap 8
         num_train_epochs=4,
         eval_strategy="epoch",
         save_strategy="epoch",
@@ -129,7 +135,7 @@ def latih_satu_seed(seed: int, train: pd.DataFrame, val: pd.DataFrame, tokenizer
         compute_metrics=hitung_f1,
         bobot_kelas=bobot,
     )
-    trainer.train()
+    trainer.train(resume_from_checkpoint=str(titik_mulai) if titik_mulai else None)
     trainer.save_model(str(out_dir))
     tokenizer.save_pretrained(str(out_dir))
     logger.info("Seed %d selesai. Checkpoint terbaik di %s", seed, out_dir)
@@ -162,6 +168,10 @@ def main() -> None:
     parser.add_argument("--test", type=Path, default=None)
     parser.add_argument("--pakai-cpu", action="store_true",
                         help="Paksa jalankan di CPU (lambat). Melewati gate GPU atas izin pemilik proyek.")
+    parser.add_argument("--seeds", type=str, default="",
+                        help="Seed yang dijalankan, dipisah koma (mis. '44'). Default: semua SEEDS_BERT.")
+    parser.add_argument("--lanjut-dari", action="store_true",
+                        help="Lanjutkan pelatihan dari checkpoint terakhir di models/bert_seed<N>/ bila ada.")
     args = parser.parse_args()
 
     from src.config import DATA_LABELED
@@ -194,8 +204,9 @@ def main() -> None:
         logger.warning("Lebih dari 5%% terpotong — pertimbangkan MAX_LEN_BERT lebih besar.")
 
     f1_per_seed = []
-    for seed in SEEDS_BERT:
-        model = latih_satu_seed(seed, train, val, tokenizer)
+    seeds = [int(s) for s in args.seeds.split(",") if s.strip()] if args.seeds else SEEDS_BERT
+    for seed in seeds:
+        model = latih_satu_seed(seed, train, val, tokenizer, lanjut=args.lanjut_dari)
         pred = prediksi_uji(model, tokenizer, test, seed)
         path = HASIL / f"prediksi_metode_b_seed{seed}.csv"
         pred.to_csv(path, index=False, encoding="utf-8-sig")
@@ -207,7 +218,15 @@ def main() -> None:
         del model
         torch.cuda.empty_cache()
 
-    df_f1 = pd.DataFrame(f1_per_seed)
+    # Agregasi dari SEMUA prediksi per-seed yang ada (termasuk run sebelumnya),
+    # bukan hanya seed pada run ini — supaya menjalankan subset seed tidak menghapus.
+    from sklearn.metrics import f1_score as _f1
+
+    semua = []
+    for p in sorted(HASIL.glob("prediksi_metode_b_seed*.csv")):
+        dfp = pd.read_csv(p, encoding="utf-8-sig")
+        semua.append({"seed": p.stem.replace("prediksi_metode_b_seed", ""), "f1_spoiler": _f1(dfp["label_benar"], dfp["prediksi"], pos_label=1)})
+    df_f1 = pd.DataFrame(semua)
     ringkas = pd.DataFrame(
         [{"f1_mean": df_f1["f1_spoiler"].mean(), "f1_std": df_f1["f1_spoiler"].std()}]
     )
