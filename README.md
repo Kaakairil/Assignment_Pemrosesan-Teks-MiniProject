@@ -75,6 +75,13 @@ dari HASH_SALT + channel id, 16 karakter).
   dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
   CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
   itu muncul lagi di `src/`.
+- **2026-11-26 — Kappa Cohen = 0,580 (n=100) — DI BAWAH AMBANG 0,6.**
+  Pelabel B menyelesaikan subset kesepakatan (96 bukan spoiler, 4 spoiler).
+  Hanya 4 ketidaksesuaian: 2 kasus batas nyata (komentar peristiwa gameplay
+  spesifik seperti "mati dimakan b2" dan "NPC teleport one punch" — A=1,
+  B=0) dan 2 kasus ambigu (opini bug/curang; referensi karakter game lain).
+  Hasil tertulis di hasil/kesepakatan.txt. Tindak lanjut: diskusikan 4 kasus,
+  perjelas panduan bila perlu, lalu hitung ulang subset baru.
 - **2026-11-26 — Pelabelan A selesai (3.607 baris).** Mode cepat
   (ENTER=0) + triage sekilas, diikuti audit kata kunci berbasis panduan:
   90 baris berlabel 0 bersinyal kuat dicek acak, 14 baris risiko tinggi
