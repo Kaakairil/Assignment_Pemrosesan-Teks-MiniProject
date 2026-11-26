@@ -65,12 +65,22 @@ dari HASH_SALT + channel id, 16 karakter).
 
 ## Keputusan
 
-- **PERINGATAN PRELIMINAR:** Hasil Metode A dan B yang tersimpan saat ini
-  dilatih dengan **label heuristik** (`src/pelabel_awal.py`, kolom
-  `label_model`), BUKAN label manusia. Sesuai CLAUDE.md, label otomatis tidak
-  boleh disebut label manusia; Cohen's kappa tidak dihitung (dilewati, bukan
-  dipalsukan). Ulangi pipeline dari `split` setelah lembar
-  `lembar_label_a/b.csv` diisi manusia untuk hasil final.
+- **2026-11-26 — Data lama tidak dipakai.** Seluruh 2.795 komentar lama
+  dipindahkan ke `data/legacy/` dan tidak dibaca pipeline. Alasan: label
+  `label_final` lama berasal dari heuristik `src/pelabel_awal.py` (kolom
+  `label_model`), bukan pelabel manusia. Hasil evaluasi lama (F1 Metode A
+  0,667; Metode B 0,665 ± 0,049) dinyatakan tidak valid dan tidak dilaporkan
+  sebagai hasil akhir. Pelabelan manusia dimulai dari nol.
+- **2026-11-26 — `src/pelabel_awal.py` dihapus.** Modul pelabel heuristik
+  dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
+  CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
+  itu muncul lagi di `src/`.
+- **2026-11-26 — `data/spoiler_example/` tidak masuk dataset.** Isi folder
+  (termasuk `contoh_200_spoiler.csv`) hanya untuk latihan pelabel dan tes
+  kode. Catatan: label di `contoh_200_spoiler.csv` BERTENTANGAN dengan aturan
+  G1 (tips dan mekanik dilabeli `spoiler`, padahal G1 menyatakan mekanik
+  tanpa dampak cerita bukan spoiler), dan label-nya tidak berasal dari
+  pelabel manusia. Tidak dipakai untuk train/val/test.
 - **Ketimpangan kelas ekstrem:** hanya ~31 komentar spoiler (1.1%) dari 2795
   — komentar atas di replay umumnya reaksi/timestamp/sapaan. Uji hanya
   berisi ~6 spoiler; metrik per-seed akan berisik. Dicatat sebagai
