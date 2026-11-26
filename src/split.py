@@ -1,12 +1,15 @@
-"""Gabung label final dan pembagian data stratified (Tahap 5)."""
+"""Gabung label final dan pembagian data per video (Tahap 5).
+
+Pembagian per video_id, bukan acak: komentar dari video yang sama bisa
+bocor antar split kalau dibagi acak. Lihat docs/update/CLAUDE.md bagian 2.
+"""
 import argparse
 import logging
 from pathlib import Path
 
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
-from src.config import DATA_LABELED, DATA_INTERIM, SEED, TEST_SIZE, VAL_SIZE
+from src.config import DATA_LABELED, DATA_INTERIM
 
 logger = logging.getLogger(__name__)
 
@@ -73,19 +76,17 @@ def gabung_label(path_interim: Path, path_label: Path) -> pd.DataFrame:
 
 
 def buat_split(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Validasi, buang ambigu (-1), lalu stratified split test dan val. Cek kebocoran ID."""
+    """Validasi, buang ambigu (-1), lalu bagi per video_id. Cek kebocoran ID."""
     df = validasi_data(df)
-    
+
     n_ambigu = int((df["label_final"] == -1).sum())
     df = df[df["label_final"] != -1].reset_index(drop=True)
     logger.info("Dibuang ambigu (-1): %d; sisa %d baris", n_ambigu, len(df))
 
-    train, test = train_test_split(
-        df, test_size=TEST_SIZE, stratify=df["label_final"], random_state=SEED
-    )
-    train, val = train_test_split(
-        train, test_size=VAL_SIZE, stratify=train["label_final"], random_state=SEED
-    )
+    train = df[df["video_id"].isin(TRAIN_VIDEO_IDS)]
+    val = df[df["video_id"].isin(VAL_VIDEO_IDS)]
+    test = df[df["video_id"].isin(TEST_VIDEO_IDS)]
+    assert len(train) + len(val) + len(test) == len(df), "Ada baris tidak masuk split mana pun"
 
     # Tidak ada ID yang muncul di dua split berbeda.
     id_train, id_val, id_test = set(train["id"]), set(val["id"]), set(test["id"])
