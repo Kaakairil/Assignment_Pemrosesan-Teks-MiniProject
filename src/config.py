@@ -21,6 +21,8 @@ MIN_KAPPA = 0.6
 MAX_LEN_BERT = 128
 MODEL_BERT = "indobenchmark/indobert-base-p1"   # cek lisensi dan ganti bila perlu
 SEEDS_BERT = [42, 43, 44]
+N_BOOTSTRAP = 1000              # resample bootstrap untuk CI F1 pada test
+ALPHA_CI = 0.05                 # tingkat signifikansi CI (0.05 -> CI 95%)
 MIN_KOMENTAR_BERSIH = 500
 TARGET_KOMENTAR_MENTAH = 1000
 
