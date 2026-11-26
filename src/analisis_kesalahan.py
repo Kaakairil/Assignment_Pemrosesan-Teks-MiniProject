@@ -46,8 +46,10 @@ def main() -> None:
     salah.to_csv(out, index=False, encoding="utf-8-sig")
     logger.info("%d baris salah klasifikasi tersimpan di %s", len(salah), out)
 
+    # Hanya Metode B yang membawa teks_bert; Metode A membawa teks_klasik.
+    kolom_teks = {"a": "teks_klasik", "b": "teks_bert"}
     for kolom in ("fn_a", "fp_a", "fn_b", "fp_b"):
-        contoh = salah[salah[kolom]]["teks_bert_b" if kolom.endswith("b") else "teks_bert_a"].head(10)
+        contoh = salah[salah[kolom]][kolom_teks[kolom[-1]]].head(10)
         logger.info("Contoh %s (%d):", kolom, len(salah[salah[kolom]]))
         for t in contoh:
             logger.info("  - %s", t)
