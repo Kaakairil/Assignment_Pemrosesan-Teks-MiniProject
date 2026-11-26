@@ -37,6 +37,18 @@ _RE_EMOJI = re.compile(
 _RE_ULANG = re.compile(r"(.)\1{2,}")
 _RE_WKW = re.compile(r"\b(?:wk){2,}\b")
 
+# Status baris (kolom `status`, baris tidak dihapus agar bisa diaudit).
+STATUS_VALID = "valid"
+STATUS_TIMESTAMP = "tidak_valid_timestamp"
+STATUS_KOSONG = "tidak_valid_kosong_atau_tautan"
+STATUS_DUPLIKAT = "duplikat"
+
+
+def hanya_timestamp(teks: str) -> bool:
+    """True jika teks hanya berisi angka, titik dua, dan spasi — dan punya minimal satu titik dua."""
+    t = teks.strip()
+    return bool(re.fullmatch(r"[\d:\s]+", t)) and ":" in t
+
 
 def muat_kamus(path: Path = KAMUS_PATH) -> dict[str, str]:
     """Muat kamus normalisasi alay dari CSV (kolom: kata_alay,kata_baku)."""
@@ -90,20 +102,31 @@ def _hanya_emoji_atau_tautan(teks: str) -> bool:
 
 
 def hapus_tidak_valid(df: pd.DataFrame) -> pd.DataFrame:
-    """Hapus teks kosong, hanya emoji/tautan, dan duplikat teks_bert. Log jumlah per kategori."""
+    """Tandai `status` tiap baris; baris TIDAK dihapus agar jumlah bisa diaudit.
+
+    Kategori status: valid, tidak_valid_timestamp, tidak_valid_kosong_atau_tautan,
+    duplikat. Deteksi memakai teks asli (`teks`), bukan teks_bert/teks_klasik,
+    karena pemrosesan bisa menghapus titik dua dari timestamp.
+    """
     awal = len(df)
-    kosong = df["teks_bert"].astype(str).str.strip() == ""
-    df = df[~kosong]
-    logger.info("Dibuang kosong: %d", kosong.sum())
+    teks_asli = df["teks"].astype(str)
 
-    emoji = df["teks_bert"].apply(_hanya_emoji_atau_tautan)
-    df = df[~emoji]
-    logger.info("Dibuang hanya emoji/tautan: %d", emoji.sum())
+    # urutan prioritas: kosong/tautan -> timestamp -> duplikat (baris pertama valid)
+    status = pd.Series(STATUS_VALID, index=df.index)
+    kosong = df["teks_bert"].astype(str).str.strip().eq("") | teks_asli.apply(
+        _hanya_emoji_atau_tautan
+    )
+    status[kosong] = STATUS_KOSONG
 
-    duplikat = df.duplicated(subset="teks_bert", keep="first")
-    df = df[~duplikat]
-    logger.info("Dibuang duplikat teks_bert: %d", duplikat.sum())
-    logger.info("Total: %d -> %d baris", awal, len(df))
+    timestamp = teks_asli.map(hanya_timestamp) & (status == STATUS_VALID)
+    status[timestamp] = STATUS_TIMESTAMP
+
+    dup = df.duplicated(subset="teks_bert", keep="first") & (status == STATUS_VALID)
+    status[dup] = STATUS_DUPLIKAT
+
+    df = df.copy()
+    df["status"] = status
+    logger.info("Status: %s (dari %d baris)", status.value_counts().to_dict(), awal)
     return df.reset_index(drop=True)
 
 
