@@ -4,6 +4,7 @@ import pandas as pd
 from src.preprocessing import (
     bersihkan_dasar,
     hapus_tidak_valid,
+    hanya_timestamp,
     normalisasi_alay,
     teks_bert,
     teks_klasik,
@@ -49,12 +50,31 @@ def test_emoji_hilang_di_klasik_tetap_di_bert():
     assert "😭" in teks_bert("keren 😭", KAMUS)
 
 
-def test_hapus_tidak_valid_kosong_dan_duplikat():
+def test_hanya_timestamp_kasus_wajib():
+    assert hanya_timestamp("1:30:30") is True
+    assert hanya_timestamp("31:38 41:42 55:52") is True
+    assert hanya_timestamp("1") is False
+    assert hanya_timestamp("3") is False
+    assert hanya_timestamp("bang misi nya seru 56:30") is False
+    assert hanya_timestamp("") is False
+
+
+def test_hapus_tidak_valid_menandai_status_tidak_menghapus():
     df = pd.DataFrame(
         {
-            "teks_bert": ["spoiler", "   ", "spoiler", "https://x.com 😭", "unik"],
+            "teks": ["spoiler", "   ", "spoiler", "https://x.com 😭", "1:30:30", "56:30", "spoiler"],
+            "teks_bert": ["spoiler", "   ", "spoiler", "https://x.com 😭", "1:30:30", "56:30", "spoiler"],
         }
     )
     hasil = hapus_tidak_valid(df)
-    # baris 3 (hanya tautan+emoji) dan 4 (duplikat "spoiler") hilang
-    assert list(hasil["teks_bert"]) == ["spoiler", "unik"]
+    # Tidak ada baris dihapus; semua baris tetap ada dengan status.
+    assert len(hasil) == len(df)
+    assert list(hasil["status"]) == [
+        "valid",
+        "tidak_valid_kosong_atau_tautan",
+        "duplikat",
+        "tidak_valid_kosong_atau_tautan",
+        "tidak_valid_timestamp",
+        "tidak_valid_timestamp",
+        "duplikat",
+    ]
