@@ -1,0 +1,30 @@
+Uji McNemar (Metode A vs Metode B, prediksi uji yang sama)
+McNemar dijalankan per seed untuk B; tanpa konsensus seed.
+
+--- Seed 42 ---
+Statistik: 17.9649
+P-value: 0.000023
+Tabel kontingensi (benar/salah per metode):
+col_0  True   False
+row_0              
+True     833     12
+False     45      7
+
+--- Seed 43 ---
+Statistik: 21.7800
+P-value: 0.000003
+Tabel kontingensi (benar/salah per metode):
+col_0  True   False
+row_0              
+True     837      8
+False     42     10
+
+--- Seed 44 ---
+Statistik: 15.5741
+P-value: 0.000079
+Tabel kontingensi (benar/salah per metode):
+col_0  True   False
+row_0              
+True     833     12
+False     42     10
+
