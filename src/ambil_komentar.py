@@ -66,14 +66,19 @@ def id_anonim(author_channel_id: str, salt: str) -> str:
     return hashlib.sha256((salt + author_channel_id).encode("utf-8")).hexdigest()[:16]
 
 
-def ke_dataframe(items: list[dict], salt: str) -> pd.DataFrame:
-    """Ubah item API ke skema 6.2 (tanpa teks_klasik/teks_bert), anonimkan penulis."""
+def ke_dataframe(items: list[dict], salt: str, video_id: str = "") -> pd.DataFrame:
+    """Ubah item API ke skema 6.2 (tanpa teks_klasik/teks_bert), anonimkan penulis.
+
+    Kolom `id` diberi awalan `yt_` dan setiap baris membawa `video_id`.
+    """
     baris = []
     for it in items:
         snip = it["snippet"]["topLevelComment"]["snippet"]
+        vid = video_id or it["snippet"].get("videoId", "")
         baris.append(
             {
-                "id": it["id"],
+                "id": f"yt_{it['id']}",
+                "video_id": vid,
                 "teks": snip.get("textDisplay", ""),
                 "waktu": snip.get("publishedAt", ""),
                 "jumlah_like": int(snip.get("likeCount", 0)),
@@ -81,7 +86,18 @@ def ke_dataframe(items: list[dict], salt: str) -> pd.DataFrame:
                 "id_anonim": id_anonim(snip.get("authorChannelId", {}).get("channelId", ""), salt),
             }
         )
-    return pd.DataFrame(baris, columns=["id", "teks", "waktu", "jumlah_like", "balasan", "id_anonim"])
+    return pd.DataFrame(
+        baris, columns=["id", "video_id", "teks", "waktu", "jumlah_like", "balasan", "id_anonim"]
+    )
+
+
+def muat_items_dari_raw(video_id: str) -> list[dict]:
+    """Muat kembali item komentar dari file mentah yang sudah ada di data/raw/."""
+    items: list[dict] = []
+    for path in sorted(DATA_RAW.glob(f"komentar_{video_id}_*_*.json")):
+        items.extend(json.loads(path.read_text(encoding="utf-8")).get("items", []))
+    logger.info("%s: %d item dimuat ulang dari file mentah", video_id, len(items))
+    return items
 
 
 def proses_video(video_id: str, api_key: str, salt: str, maks_komentar: int) -> pd.DataFrame:
@@ -108,10 +124,10 @@ def proses_video(video_id: str, api_key: str, salt: str, maks_komentar: int) -> 
                 detail = ""
             if alas == 403 and "commentsDisabled" in str(e.content):
                 logger.warning("Komentar dinonaktifkan untuk %s — video dilewati.", video_id)
-                return ke_dataframe(items, salt)
+                return ke_dataframe(items, salt, video_id)
             if alas == 403 and "quotaExceeded" in str(e.content):
                 logger.error("Kuota API habis di %s. Progres %d komentar dipertahankan.", video_id, len(items))
-                return ke_dataframe(items, salt)
+                return ke_dataframe(items, salt, video_id)
             logger.error("HttpError %s pada %s: %s", alas, video_id, detail)
             raise
         simpan_mentah(resp, video_id)
@@ -123,25 +139,26 @@ def proses_video(video_id: str, api_key: str, salt: str, maks_komentar: int) -> 
             break
         time.sleep(0.1)
     logger.info("%s: selesai, %d komentar dari %d halaman", video_id, len(items), halaman)
-    return ke_dataframe(items[:maks_komentar], salt)
+    return ke_dataframe(items[:maks_komentar], salt, video_id)
 
 
 def main() -> None:
     """CLI: python -m src.ambil_komentar --video-id ID [--maks N]"""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     parser = argparse.ArgumentParser(description="Ambil komentar YouTube dan simpan mentah.")
-    parser.add_argument("--video-id", default="", help="ID video YouTube (bisa beberapa, dipisah koma); default dari VIDEO_ID di .env")
+    parser.add_argument("--video-ids", default="", help="ID video YouTube dipisah koma; default dari TRAIN/VAL/TEST_VIDEO_IDS di .env")
     parser.add_argument("--maks", type=int, default=TARGET_KOMENTAR_MENTAH, help="Maks komentar per video")
     args = parser.parse_args()
 
     api_key = muat_key()
     salt = muat_env("HASH_SALT")
 
-    if not args.video_id:
-        args.video_id = muat_env("VIDEO_ID")
+    if not args.video_ids:
+        from src.config import SEMUA_VIDEO_IDS
+        args.video_ids = ",".join(SEMUA_VIDEO_IDS)
 
     gabungan = []
-    for vid in [v.strip() for v in args.video_id.split(",") if v.strip()]:
+    for vid in [v.strip() for v in args.video_ids.split(",") if v.strip()]:
         df = proses_video(vid, api_key, salt, args.maks)
         gabungan.append(df)
 
