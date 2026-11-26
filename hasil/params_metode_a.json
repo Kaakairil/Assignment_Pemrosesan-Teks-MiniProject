@@ -1,11 +1,134 @@
 {
   "best_params": {
-    "clf__C": 10,
-    "tfidf__max_features": null,
     "tfidf__ngram_range": [
       1,
-      1
-    ]
+      2
+    ],
+    "tfidf__max_features": null,
+    "clf__C": 0.1
   },
-  "cv_f1": 0.7373737373737373
+  "f1_val": 0.39285714285714285,
+  "f1_test": 0.3953,
+  "log_semua_kombinasi": [
+    {
+      "tfidf__ngram_range": [
+        1,
+        1
+      ],
+      "tfidf__max_features": null,
+      "clf__C": 0.1,
+      "ngram": "(1, 1)",
+      "f1_val": 0.3729
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        1
+      ],
+      "tfidf__max_features": null,
+      "clf__C": 1,
+      "ngram": "(1, 1)",
+      "f1_val": 0.3922
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        1
+      ],
+      "tfidf__max_features": null,
+      "clf__C": 10,
+      "ngram": "(1, 1)",
+      "f1_val": 0.3478
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        1
+      ],
+      "tfidf__max_features": 10000,
+      "clf__C": 0.1,
+      "ngram": "(1, 1)",
+      "f1_val": 0.3729
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        1
+      ],
+      "tfidf__max_features": 10000,
+      "clf__C": 1,
+      "ngram": "(1, 1)",
+      "f1_val": 0.3922
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        1
+      ],
+      "tfidf__max_features": 10000,
+      "clf__C": 10,
+      "ngram": "(1, 1)",
+      "f1_val": 0.3478
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        2
+      ],
+      "tfidf__max_features": null,
+      "clf__C": 0.1,
+      "ngram": "(1, 2)",
+      "f1_val": 0.3929
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        2
+      ],
+      "tfidf__max_features": null,
+      "clf__C": 1,
+      "ngram": "(1, 2)",
+      "f1_val": 0.3922
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        2
+      ],
+      "tfidf__max_features": null,
+      "clf__C": 10,
+      "ngram": "(1, 2)",
+      "f1_val": 0.3721
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        2
+      ],
+      "tfidf__max_features": 10000,
+      "clf__C": 0.1,
+      "ngram": "(1, 2)",
+      "f1_val": 0.3929
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        2
+      ],
+      "tfidf__max_features": 10000,
+      "clf__C": 1,
+      "ngram": "(1, 2)",
+      "f1_val": 0.3922
+    },
+    {
+      "tfidf__ngram_range": [
+        1,
+        2
+      ],
+      "tfidf__max_features": 10000,
+      "clf__C": 10,
+      "ngram": "(1, 2)",
+      "f1_val": 0.3721
+    }
+  ]
 }
