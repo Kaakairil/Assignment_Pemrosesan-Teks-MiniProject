@@ -1,0 +1,9 @@
+Uji McNemar (Metode A vs Metode B konsensus)
+Statistik: 0.0000
+P-value: 1.000000
+
+Tabel kontingensi (benar/salah per metode):
+col_0  True   False
+row_0              
+True     552      2
+False      3      2
