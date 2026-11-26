@@ -82,43 +82,55 @@ def main() -> None:
 
     baris = [{"metode": "A (TF-IDF + LogReg)", **metrik_spoiler(pred_a["label_benar"], pred_a["prediksi"])}]
 
-    f1s, recalls, precisions = [], [], []
-    pred_b_mean = None
-    for pb in preds_b:
-        m = metrik_spoiler(pb["label_benar"], pb["prediksi"])
-        f1s.append(m["f1_spoiler"])
-        recalls.append(m["recall_spoiler"])
-        precisions.append(m["precision_spoiler"])
+    # Metrik per seed, lalu dilaporkan sebagai rata-rata ± simpangan baku.
+    metrik_seed = [metrik_spoiler(pb["label_benar"], pb["prediksi"]) for pb in preds_b]
+    df_seed = pd.DataFrame(metrik_seed)
+
     # Prediksi konsensus: rata-rata skor antar seed, ambang 0.5.
+    # PENTING: petakan lewat kolom id — assignment Series berindeks id ke DataFrame
+    # ber-RangeIndex akan menghasilkan NaN semua.
+    skor_rata = sum(p.set_index("id")["skor"] for p in preds_b) / len(preds_b)
     gab = preds_b[0][["id", "label_benar"]].copy()
-    gab["skor_rata"] = sum(p.set_index("id")["skor"] for p in preds_b) / len(preds_b)
+    gab["skor_rata"] = gab["id"].map(skor_rata)
     gab["prediksi"] = (gab["skor_rata"] >= 0.5).astype(int)
     pred_b_mean = gab
+
     baris.append(
         {
-            "metode": "B (IndoBERT, mean seed)",
-            **metrik_spoiler(pred_b_mean["label_benar"], pred_b_mean["prediksi"]),
-            "f1_std_antar_seed": pd.Series(f1s).std(),
+            "metode": "B (IndoBERT, mean±std antar seed)",
+            "precision_spoiler": df_seed["precision_spoiler"].mean(),
+            "recall_spoiler": df_seed["recall_spoiler"].mean(),
+            "f1_spoiler": df_seed["f1_spoiler"].mean(),
+            "macro_f1": df_seed["macro_f1"].mean(),
+            "accuracy": df_seed["accuracy"].mean(),
+            "f1_std_antar_seed": df_seed["f1_spoiler"].std(),
+            "recall_std_antar_seed": df_seed["recall_spoiler"].std(),
+            "n_seed": len(df_seed),
         }
     )
     baris[0]["f1_std_antar_seed"] = None
+    baris[0]["recall_std_antar_seed"] = None
+    baris[0]["n_seed"] = 1
 
     df_metrik = pd.DataFrame(baris)
     df_metrik.to_csv(HASIL / "metrik.csv", index=False, encoding="utf-8-sig")
     logger.info("Metrik tersimpan:\n%s", df_metrik.to_string(index=False))
+    logger.info("Metrik konsensus B (mean skor antar seed):\n%s",
+                metrik_spoiler(pred_b_mean["label_benar"], pred_b_mean["prediksi"]))
 
     simpan_confusion_matrix(
         pred_a["label_benar"], pred_a["prediksi"], "Confusion Matrix — Metode A (TF-IDF + LogReg)",
         HASIL / "confusion_matrix_metode_a.png",
     )
     simpan_confusion_matrix(
-        pred_b_mean["label_benar"], pred_b_mean["prediksi"], "Confusion Matrix — Metode B (IndoBERT, mean seed)",
+        pred_b_mean["label_benar"], pred_b_mean["prediksi"], "Confusion Matrix — Metode B (IndoBERT, konsensus seed)",
         HASIL / "confusion_matrix_metode_b.png",
     )
 
-    m = uji_mcnemar(pred_a, preds_b[0])
+    # McNemar: A vs B konsensus (data uji yang sama).
+    m = uji_mcnemar(pred_a, pred_b_mean)
     with open(HASIL / "mcnemar.txt", "w", encoding="utf-8") as f:
-        f.write("Uji McNemar (Metode A vs Metode B seed pertama)\n")
+        f.write("Uji McNemar (Metode A vs Metode B konsensus)\n")
         f.write(f"Statistik: {m['statistik']:.4f}\n")
         f.write(f"P-value: {m['p_value']:.6f}\n\n")
         f.write("Tabel kontingensi (benar/salah per metode):\n")
