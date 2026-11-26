@@ -75,6 +75,12 @@ dari HASH_SALT + channel id, 16 karakter).
   dihapus dari pipeline (`git rm`); kolom `label_model` dihapus dari semua
   CSV. Tes `tests/test_split.py::test_no_label_model_in_src` mencegah kolom
   itu muncul lagi di `src/`.
+- **2026-11-26 — Klarifikasi G1 (easter egg/misteri).** Komentar yang
+  mengungkap lokasi/keberadaan easter egg atau misteri dunia (bigfoot, UFO,
+  portal, topi Arthur) TANPA dampak ke alur/nasib karakter = 0. Alasan:
+  definisi spoiler proyek adalah spoiler cerita, bukan "spoiler pengalaman
+  menemukan". Ditambahkan ke panduan sebelum pelabelan penuh (panduan belum
+  dibekukan untuk pelabel B); tidak ada label lama yang terdampak.
 - **2026-11-26 — Panduan label v2.1 disetujui dan dikunci.** Pemilik
   menyetujui `panduan/panduan_label.md` (aturan S1–S6, G1, T1, R1, contoh S5
   tips+konsekuensi). Mulai sekarang perubahan panduan wajib dicatat ulang dan
