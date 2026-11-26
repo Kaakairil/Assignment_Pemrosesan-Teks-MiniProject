@@ -31,6 +31,26 @@ LABEL_AMBIGU = -1
 load_dotenv(ROOT / ".env")
 
 
+def _daftar_video(kunci: str) -> list[str]:
+    """Baca daftar video ID dari .env (dipisah koma), tanpa menampilkan nilainya."""
+    nilai = os.getenv(kunci, "").strip()
+    if not nilai:
+        raise SystemExit(f"Variabel {kunci} kosong di .env. Isi sesuai docs/update/CLAUDE.md bagian 2.")
+    return [v.strip() for v in nilai.split(",") if v.strip()]
+
+
+TRAIN_VIDEO_IDS = _daftar_video("TRAIN_VIDEO_IDS")
+VAL_VIDEO_IDS = _daftar_video("VAL_VIDEO_IDS")
+TEST_VIDEO_IDS = _daftar_video("TEST_VIDEO_IDS")
+
+# Tidak boleh ada video yang muncul di dua peran.
+assert not (set(TRAIN_VIDEO_IDS) & set(VAL_VIDEO_IDS)), "TRAIN dan VAL beririsan"
+assert not (set(TRAIN_VIDEO_IDS) & set(TEST_VIDEO_IDS)), "TRAIN dan TEST beririsan"
+assert not (set(VAL_VIDEO_IDS) & set(TEST_VIDEO_IDS)), "VAL dan TEST beririsan"
+
+SEMUA_VIDEO_IDS = TRAIN_VIDEO_IDS + VAL_VIDEO_IDS + TEST_VIDEO_IDS
+
+
 def muat_env(kunci: str) -> str:
     """Baca variabel .env; hentikan dengan pesan jelas jika kosong (tanpa menampilkan nilai)."""
     nilai = os.getenv(kunci, "").strip()
