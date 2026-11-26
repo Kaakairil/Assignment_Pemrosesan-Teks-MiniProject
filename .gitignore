@@ -8,3 +8,5 @@ checkpoints/
 .ipynb_checkpoints/
 models/
 
+data/legacy/
+data/spoiler_example/
