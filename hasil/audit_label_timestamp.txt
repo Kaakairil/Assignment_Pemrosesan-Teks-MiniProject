@@ -1,0 +1,17 @@
+Audit label pada baris timestamp-only (hasil perbaikan)
+Aturan: hanya_timestamp membutuhkan minimal satu titik dua.
+Baris '1' dan '2' (loose pattern tanpa titik dua) juga dikoreksi.
+
+file                                                 rows  timestamp  label_dikosongkan
+data/labeled/komentar_berlabel.csv                   2795        105                105
+data/labeled/train.csv                               2012         76                 76
+data/labeled/val.csv                                  224          4                  4
+data/labeled/test.csv                                 559         25                 25
+data/labeled/lembar_label_a.csv                      2795        105                105
+data/labeled/lembar_label_b.csv                      2795        105                105
+data/interim/komentar_bersih.csv                     2795        105                  0
+
+TOTAL label dikosongkan: 420
+
+Label lama dipindahkan ke kolom label_lama_tidak_valid (bukan dihapus).
+Semua label lama pada baris tersebut bernilai 0 (bukan -1).
