@@ -86,7 +86,7 @@ def buat_dataset(teks: list[str], label: list[int], tokenizer) -> "datasets.Data
         {
             "input_ids": enc["input_ids"],
             "attention_mask": enc["attention_mask"],
-            "labels": list(label),
+            "labels": [int(l) for l in label],  # Long diperlukan CrossEntropyLoss; float bikin RuntimeError
         }
     )
 
