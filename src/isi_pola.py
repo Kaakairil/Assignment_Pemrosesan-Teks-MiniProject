@@ -3,6 +3,7 @@
 CLI: python -m src.isi_pola
 """
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -14,6 +15,7 @@ POLA = ["sindiran", "bahasa_campuran", "teks_pendek", "hanya_nama_karakter",
 
 
 def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")  # emoji di teks komentar
     parser = argparse.ArgumentParser(description="Isi kolom pola per baris.")
     parser.add_argument("--file", type=Path, default=HASIL / "analisis_kesalahan.csv")
     args = parser.parse_args()
