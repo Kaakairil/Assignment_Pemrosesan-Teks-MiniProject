@@ -11,7 +11,7 @@ import pandas as pd
 from src.config import HASIL
 
 POLA = ["sindiran", "bahasa_campuran", "teks_pendek", "hanya_nama_karakter",
-        "menyebut_ending_tanpa_detail", "tips_mekanik", "lainnya"]
+        "menyebut_jalan_cerita_dan_cara", "tips_mekanik", "lainnya"]
 
 
 def main() -> None:
