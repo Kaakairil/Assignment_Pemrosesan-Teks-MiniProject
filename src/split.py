@@ -1,7 +1,7 @@
 """Gabung label final dan pembagian data per video (Tahap 5).
 
 Pembagian per video_id, bukan acak: komentar dari video yang sama bisa
-bocor antar split kalau dibagi acak. Lihat docs/update/CLAUDE.md bagian 2.
+bocor antar split kalau dibagi acak. Lihat dokumen proyek (docs/update) bagian 2.
 """
 import argparse
 import logging
@@ -13,7 +13,7 @@ from src.config import DATA_LABELED, DATA_INTERIM
 
 logger = logging.getLogger(__name__)
 
-# Video IDs dari CLAUDE.md v2.1 tabel pembagian (bagian 2)
+# Video IDs dari dokumen proyek v2.1 tabel pembagian (bagian 2)
 TRAIN_VIDEO_IDS = {
     "45r3OyaxvFE", "QSPPyA1736U", "B2Bon2X1jPQ", "03qhcshfeMY",
     "lF_QYSm2T-Q", "u_Lb6sh9N0M", "MWQtXTTAgeM", "z6sBvvg_004",
