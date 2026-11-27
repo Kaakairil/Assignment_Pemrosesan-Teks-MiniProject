@@ -23,7 +23,7 @@ VIDEO_ID=id1,id2,...        # beberapa ID dipisah koma
 HASH_SALT=string_acak_panjang
 ```
 
-## Alur kerja (tahapan CLAUDE.md)
+## Alur kerja (tahapan dokumen proyek)
 
 ```bash
 # Tahap 1 — ambil komentar (semua video di VIDEO_ID)
@@ -59,7 +59,7 @@ python -m src.analisis_kesalahan
 
 ## Struktur
 
-Lihat CLAUDE.md bagian 4. Data mentah (`data/raw/`) tidak di-commit; yang
+Lihat dokumen proyek bagian struktur folder. Data mentah (`data/raw/`) tidak di-commit; yang
 dibagikan adalah `data/labeled/` yang sudah dianonimkan (id_anonim = SHA-256
 dari HASH_SALT + channel id, 16 karakter).
 
@@ -139,9 +139,9 @@ dari HASH_SALT + channel id, 16 karakter).
   rata-rata ± simpangan baku antar tiga seed (42/43/44); tidak ada prediksi
   gabungan seed dan tidak ada seed dipilih berdasarkan data uji. McNemar
   dijalankan per seed.
-- **numpy 2.x:** templat `requirements.txt` di CLAUDE.md memakai `numpy==1.*`,
+- **numpy 2.x:** templat `requirements.txt` awal proyek memakai `numpy==1.*`,
   tetapi pyarrow/datasets modern butuh numpy≥2 — dinaikkan ke `numpy==2.*`.
-- **Beberapa video:** CLAUDE.md menyebut satu video, tetapi pemilik memberikan
+- **Beberapa video:** rancangan awal menyebut satu video, tetapi saya memberikan
   10 tautan video live Windah Basudara. `ambil_komentar` menerima beberapa ID
   dipisah koma; setiap video dibatasi `--maks 1000` komentar mentah per video.
 - **Kamus alay:** dibuat manual, konservatif (hanya penggantian yang jelas:
