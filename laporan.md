@@ -201,26 +201,45 @@ mana yang lebih baik.
 
 `hasil/analisis_kesalahan.csv` berisi 64 baris salah klasifikasi (gabungan
 A dan B seed 42, berdasarkan `id`): A — 5 FN, 47 FP; B — 17 FN, 2 FP.
-Kolom `pola` dan `jenis_galat` (galat label vs galat model) diisi manual
-oleh pemilik proyek dengan kategori: sindiran, bahasa_campuran,
-teks_pendek, hanya_nama_karakter, menyebut_ending_tanpa_detail,
-tips_mekanik, lainnya.
+Kolom `pola` dan `jenis_galat` diisi manual oleh pemilik proyek.
 
-Pengamatan awal dari contoh kesalahan (belum lengkap sampai kolom diisi):
+**Pemisahan galat label vs galat model** (review manual satu per satu):
 
-- **FN A (5)**: komentar saran hubungan Jason–Lucia yang menyebut "ending"
-  sebagai konsekuensi (S6). Model leksikal tidak mengaitkan frasa
+- **5 galat label** (tidak dihitung sebagai kegagalan model):
+  3 baris berlabel 1 padahal sesuai panduan bukan spoiler
+  (misteri dunia = G1; lelucon jadwal live; tips mekanik murni = G1),
+  dan 2 baris berlabel 0 padahal spoiler (menyebut keputusan penentu
+  ending = S5/S6). Akibatnya metrik tercatat sedikit merugikan KEDUA
+  metode secara serupa — kesimpulan perbandingan tidak berubah.
+- **59 galat model.**
+
+**Distribusi pola** (review manual, kategori menurut penyebab kesalahan):
+
+| Pola | Jumlah | Galat model | Galat label |
+|---|---|---|---|
+| teks_pendek | 19 | 19 | 0 |
+| sindiran | 16 | 15 | 1 |
+| menyebut_jalan_cerita_dan_cara | 16 | 14 | 2 |
+| tips_mekanik | 13 | 11 | 2 |
+
+Catatan makna kategori: `menyebut_jalan_cerita_dan_cara` = komentar yang
+mengungkap jalan cerita beserta cara mencapainya (mis. naikkan relationship
+Jason–Lucia agar tidak bad ending, jaga tabungan/rampok ≤ 2jt agar good
+ending) — aturan S5/S6. Mayoritas komentar yang hanya menyebut kata
+"ending" adalah reaksi **akhir stream** (mis. penjualan mobil Bugatti),
+bukan spoiler — sesuai penemuan audit pelabelan.
+
+Pengamatan dari contoh kesalahan:
+
+- **FN A (5)**: komentar saran hubungan Jason–Lucia yang menyebut
+  konsekuensi ending (S6). Model leksikal tidak mengaitkan frasa
   bermakna campuran.
-- **FP A (47)**: dominan komentar yang menyebut kata "ending" sebagai
-  **akhir stream**, bukan ending game — jebakan semantik yang juga ditemukan
-  saat audit pelabelan. Contoh: "kecewa ending", "kampret ending",
+- **FP A (47)**: dominan reaksi "ending" akhir stream — jebakan semantik
+  kata "ending". Contoh: "kecewa ending", "kampret ending",
   "good byee bugatti".
-- **FN B (17)**: pola serupa dengan FN A (saran hubungan + kata "ending"),
-  ditambah teks pendek dan bahasa campuran informal.
+- **FN B (17)**: pola serupa dengan FN A, ditambah teks pendek dan bahasa
+  campuran informal.
 - **FP B (2)**: komentar panjang yang merinci mekanik/misi secara detail.
-
-Pemisahan galat label vs galat model menunggu pengisian manual; galat
-label tidak dihitung sebagai kegagalan model.
 
 ## 8. Keterbatasan
 
