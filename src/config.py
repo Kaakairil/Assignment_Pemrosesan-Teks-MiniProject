@@ -37,7 +37,7 @@ def _daftar_video(kunci: str) -> list[str]:
     """Baca daftar video ID dari .env (dipisah koma), tanpa menampilkan nilainya."""
     nilai = os.getenv(kunci, "").strip()
     if not nilai:
-        raise SystemExit(f"Variabel {kunci} kosong di .env. Isi sesuai docs/update/CLAUDE.md bagian 2.")
+        raise SystemExit(f"Variabel {kunci} kosong di .env. Isi sesuai dokumen proyek (docs/update) bagian 2.")
     return [v.strip() for v in nilai.split(",") if v.strip()]
 
 
