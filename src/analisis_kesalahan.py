@@ -10,7 +10,7 @@ from src.config import HASIL
 logger = logging.getLogger(__name__)
 
 POLA = ["sindiran", "bahasa_campuran", "teks_pendek", "hanya_nama_karakter",
-        "menyebut_ending_tanpa_detail", "lainnya"]
+        "menyebut_jalan_cerita_dan_cara", "lainnya"]
 
 
 def gabung_prediksi(pred_a: pd.DataFrame, pred_b: pd.DataFrame) -> pd.DataFrame:
