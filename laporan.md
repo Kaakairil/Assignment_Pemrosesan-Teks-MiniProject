@@ -201,7 +201,7 @@ mana yang lebih baik.
 
 `hasil/analisis_kesalahan.csv` berisi 64 baris salah klasifikasi (gabungan
 A dan B seed 42, berdasarkan `id`): A — 5 FN, 47 FP; B — 17 FN, 2 FP.
-Kolom `pola` dan `jenis_galat` diisi manual oleh pemilik proyek.
+Kolom `pola` dan `jenis_galat` diisi manual setelah review satu per satu.
 
 **Pemisahan galat label vs galat model** (review manual satu per satu):
 
