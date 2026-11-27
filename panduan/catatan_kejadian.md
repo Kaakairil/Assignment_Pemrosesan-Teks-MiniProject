@@ -1,12 +1,12 @@
 # Catatan Kejadian — Referensi Pelabel
 
-> DIBUAT MANUAL OLEH PEMILIK PROYEK dari menonton video. Bukan dari Claude atau
+> DIBUAT MANUAL OLEH PEMILIK PROYEK dari menonton video. Bukan dari alat otomatis atau
 > halaman YouTube. Referensi bagi pelabel untuk menilai apakah komentar
 > mengungkap peristiwa yang sudah terjadi di video.
 >
 > Status: FINAL (Bagian 6). Panduan label terkunci: panduan_label.md v2.1.
 > Konvensi penamaan mengikuti judul video; nomor part = nomor episode di tabel
-> pembagian (`docs/update/CLAUDE.md` bagian 2).
+> pembagian (dokumen proyek bagian 2).
 
 ## Episode 1 — 45r3OyaxvFE
 **Judul:** GTA VI SIAP TAMAT 100%.... GTA 6 GAMEPLAY #1
