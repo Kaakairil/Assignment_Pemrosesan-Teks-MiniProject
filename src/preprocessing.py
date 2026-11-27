@@ -33,7 +33,7 @@ _RE_EMOJI = re.compile(
     "\U00002190-\U000021FF\U00002B00-\U00002BFF️‍]+"
 )
 # Pengulangan huruf lebih dari dua dipangkas jadi satu (contoh wajib dari
-# CLAUDE.md: "bangettt" -> "banget"), kecuali pola wkwk yang dinormalisasi ke "wkwk".
+# rujukan panduan teknis: "bangettt" -> "banget"), kecuali pola wkwk yang dinormalisasi ke "wkwk".
 _RE_ULANG = re.compile(r"(.)\1{2,}")
 _RE_WKW = re.compile(r"\b(?:wk){2,}\b")
 
