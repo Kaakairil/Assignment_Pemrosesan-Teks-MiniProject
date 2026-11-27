@@ -4,7 +4,7 @@
 dimulai, panduan tidak boleh diubah tanpa mencatat ulang dan melabeli ulang
 data terdampak (lihat README bagian Keputusan).
 
-Sumber aturan: `docs/update/CLAUDE.md` bagian 10. Contoh di Lampiran A hanya
+Sumber aturan: dokumen proyek (docs/update) bagian 10. Contoh di Lampiran A hanya
 untuk latihan pelabel, bukan data latih.
 
 ---
